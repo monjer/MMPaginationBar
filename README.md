@@ -6,7 +6,7 @@ Flex4 simple pagination bar component , based on Flex SDK4.6
 ####当前工程的部署环境:
 
 + Mac OS X
-+ Eclipse 4.2
++ Eclipse 4.2 + Flash Builder4.6 plugins
 + Flex SDK4.6
 
 ####使用方式(How to use)
