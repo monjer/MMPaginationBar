@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 	
+	@author manjun.han
+	@date 2013.9.10
+	@purpose 分页工具条组件，对外提供数据分页功能
+-->
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="300" height="30">
+	
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		.pagination-button
+		{
+			skinClass:ClassReference("com.mm.ui.skin.MMPaginationButtonSkin");	
+			fontSize:12;
+			backgroundColor:white;
+			downStateBackgroundColor:#cbcbcb;
+			borderColor:#b4b3b3;
+			color:#565454;
+			cornerRadius:2;
+		}
+		
+		.curSelected-pagination-button
+		{
+			color:red;
+		}		
+	</fx:Style>
+	
+	<fx:Metadata>
+		[Event(name=MMPaginationChangedEvent.PaginationIndexChanged, type="com.mm.events.MMPaginationChangedEvent")]
+	</fx:Metadata>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.mm.event.MMPaginationChangedEvent;
+			import com.mm.model.MMPaginationLocal;
+			import com.mm.model.MMPaginationModel;
+			
+			//----------------------------------
+			// 属性
+			//----------------------------------
+			
+			private var _curPaginationButtonStartOffset:Number = 3 ;
+			
+			private var _perPageDataCount:Number = 10 ;
+			
+			private var _paginationButtonLength:Number = 6 ;
+			
+			private var pageVO:MMPaginationModel = new MMPaginationModel(); // 分页数据模型
+			
+			private var _localCfg:MMPaginationLocal = new MMPaginationLocal();
+			
+			//----------------------------------
+			// 方法
+			//----------------------------------
+			
+			/**
+			 * @purpose 设置新的pageVO的分页数据
+			 * @param 分页数据项总个数
+			 * @param 当前选中页索引
+			 */
+			public function initPaginationModel(totalDataSize:Number , currentSelectedIndex:Number):void
+			{
+				var me:MMPaginationToolBar = this ;
+				
+				this.pageVO = new MMPaginationModel({
+					totalPageDataCount:totalDataSize,
+					perPageDataCount:me.perPageDataCount,
+					currentPageIndexOfView:currentSelectedIndex,
+					curPaginationButtonStartOffset:me.curPaginationButtonStartOffset,
+					paginationButtonLength:me.paginationButtonLength
+					
+				});
+				
+				this.refreshPaginationUI();
+			}
+			
+			/**
+			 * @purpose 根据pageVo的信息刷新当前pageToolBar的状态
+			 */
+			public function refreshPaginationUI():void
+			{
+				pageButtonsGroup.removeAllElements();
+				
+				var buttonLength:Number = this.pageVO.getPaginationButtonLength();
+				
+				var button:Button ;
+				
+				var startPageIndex:Number = this.pageVO.startPageIndex ;
+				
+				var curPageIndex:Number = this.pageVO.currentPageIndex ;
+				
+				for(var i:int = 0 ; i < buttonLength ; i++){
+					
+					button = new Button();
+					
+					button.label = String(startPageIndex+i+1);
+					
+					if(startPageIndex+i == curPageIndex){
+						button.styleName = "pagination-button curSelected-pagination-button";
+					}else{
+						button.styleName = "pagination-button";
+					}
+					
+					button.addEventListener(MouseEvent.CLICK , paginationButtonClickHandler);
+					
+					pageButtonsGroup.addElement(button);
+				}
+				
+				headerButton.enabled = this.pageVO.isPreButtonEnabled() ;
+				
+				preButton.enabled = this.pageVO.isPreButtonEnabled() ;
+				
+				tailButton.enabled = this.pageVO.isNextButtonEnabled() ;
+				
+				nextButton.enabled = this.pageVO.isNextButtonEnabled() ;
+				
+				var curPageLabelText:String = this.localCfg.curPageInforLabel.replace(MMPaginationLocal.currentPageIndexTmplString , this.pageVO.currentPageIndex+1);
+				
+					curPageLabelText = curPageLabelText.replace(MMPaginationLocal.totalPageSizeTmplString,this.pageVO.totalPageSize);
+					
+				curPageLabel.text = curPageLabelText ;
+				
+				this.dispatchPageIndexChangeEvent();
+			}
+			
+			/**
+			 * @purpose 派发分页事件
+			 */
+			private function dispatchPageIndexChangeEvent():void
+			{	
+				// index start from 0
+				var currentPageIndex:Number = this.pageVO.currentPageIndex ;
+				var perPageDataCount:Number = this.pageVO.perPageDataCount ;
+				var event:MMPaginationChangedEvent = new MMPaginationChangedEvent(MMPaginationChangedEvent.PaginationIndexChanged, currentPageIndex , perPageDataCount);
+				
+				dispatchEvent(event);
+			}
+			
+			//----------------------------------
+			// 事件处理
+			//----------------------------------
+			
+			/**
+			 * @purpose 分页按键click事件
+			 * @param event Mouse Event
+			 */
+			public function paginationButtonClickHandler(event:MouseEvent):void
+			{
+				var button:Button = event.target as Button ;
+				
+				var indexOfView:Number = Number(button.label) ;
+				
+				if(indexOfView != this.pageVO.currentPageIndex+1){
+					
+					this.pageVO.setCurrentPageIndex(indexOfView);
+					
+					this.refreshPaginationUI();
+					
+				}				
+			}
+			
+			/**
+			 * @purpose 首页按键事件
+			 * @param event Mouse Event
+			 */
+			protected function headerButton_clickHandler(event:MouseEvent):void
+			{				
+				this.pageVO.setCurrentPageIndex(1);	
+				
+				this.refreshPaginationUI();
+			}
+			
+			/**
+			 * @purpose 上一页按键事件
+			 * @param event Mouse Event
+			 */
+			protected function preButton_clickHandler(event:MouseEvent):void
+			{
+				this.pageVO.goToPrePage();
+				
+				this.refreshPaginationUI();
+			}
+			
+			/**
+			 * @purpose 下一页按键事件
+			 * @param event Mouse Event
+			 */
+			protected function nextButton_clickHandler(event:MouseEvent):void
+			{
+				this.pageVO.goToNextPage();
+				
+				this.refreshPaginationUI();
+			}
+			
+			/**
+			 * @purpose 尾部按键事件
+			 * @param event Mouse Event
+			 */
+			protected function tailButton_clickHandler(event:MouseEvent):void
+			{
+				this.pageVO.setCurrentPageIndex(this.pageVO.totalPageSize);
+				
+				this.refreshPaginationUI();	
+			}
+			
+			//------------------------------------------
+			//	setter/getter方法
+			//------------------------------------------
+			
+			[Bindable]
+			public function get perPageDataCount():Number
+			{
+				return _perPageDataCount;
+			}
+
+			public function set perPageDataCount(value:Number):void
+			{
+				_perPageDataCount = value;
+				this.pageVO.setPerPageDataCount(value);
+				this.refreshPaginationUI();
+			}
+
+			[Bindable]
+			public function get paginationButtonLength():Number
+			{
+				return _paginationButtonLength;
+			}
+
+			public function set paginationButtonLength(value:Number):void
+			{
+				_paginationButtonLength = value;
+				this.pageVO.setPaginationButtonLength(value);
+				this.refreshPaginationUI();
+			}
+
+			[Bindable]
+			public function get curPaginationButtonStartOffset():Number
+			{
+				return _curPaginationButtonStartOffset;
+			}
+
+			public function set curPaginationButtonStartOffset(value:Number):void
+			{
+				_curPaginationButtonStartOffset = value;
+				this.pageVO.setCurPaginationButtonStartOffset(value);
+				this.refreshPaginationUI();
+			}
+			
+			[Bindable]
+			public function get localCfg():MMPaginationLocal
+			{
+				return _localCfg;
+			}
+			
+			public function set localCfg(value:MMPaginationLocal):void
+			{
+				_localCfg = value;
+				
+				this.refreshPaginationUI();
+			}
+			
+		]]>
+	</fx:Script>
+	<s:layout>
+		<s:HorizontalLayout horizontalAlign="left" verticalAlign="middle"/>
+	</s:layout>
+	<s:Button id="headerButton" label="{localCfg.headerButtonLabel}" styleName="pagination-button" buttonMode="true" click="headerButton_clickHandler(event)"/>
+	<s:Button id="preButton" label="{localCfg.preButtonLabel}" styleName="pagination-button" buttonMode="true" click="preButton_clickHandler(event)"/>
+	<s:HGroup id="pageButtonsGroup" paddingLeft="10" paddingRight="10" height="100%" width="100%" verticalAlign="middle">		
+	</s:HGroup>
+	<s:Button id="nextButton" label="{localCfg.nextButtonLabel}" styleName="pagination-button" buttonMode="true" click="nextButton_clickHandler(event)"/>
+	<s:Button id="tailButton" label="{localCfg.tailButtonLabel}" styleName="pagination-button" buttonMode="true" click="tailButton_clickHandler(event)"/>
+	<s:Label id="curPageLabel" paddingLeft="30" height="100%" verticalAlign="middle" paddingTop="5"/>
+</s:Group>
