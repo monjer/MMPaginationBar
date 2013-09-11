@@ -17,7 +17,7 @@ Flex4 simple pagination bar component , based on Flex SDK4.6
 
 1. 在以mxml为基础的自定义组件内部，可直接以标签的方式添加MMPaginationBar组件，如
 
-	<ui:MMPaginationToolBar id="paginationToolBar" width="300" height="30"/>	
+	<ui:MMPaginationToolBar id="paginationToolBar" width="300" height="30"/>
 
 2. 初始化MMPaginationBar组建，监听MMPaginationChangedEvent.PaginationIndexChanged分页事件，添加处理方法
 
