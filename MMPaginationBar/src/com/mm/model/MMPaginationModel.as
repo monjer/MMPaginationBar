@@ -44,9 +44,9 @@ package com.mm.model
 				
 		public var startPageIndex:Number = 0; //起始页页码
 				
-		public var preButtonEnabled:Boolean = false ; //是否显示前翻页
+		public var preButtonEnabled:Boolean = false ; //是否禁用前翻页
 				
-		public var nextButtonEnabled:Boolean = false ; //是否显示后翻页
+		public var nextButtonEnabled:Boolean = false ; //是否禁用后翻页
 		
 		//-----------------------------------
 		// 方法
