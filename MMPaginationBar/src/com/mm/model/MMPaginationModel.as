@@ -4,7 +4,7 @@ package com.mm.model
 	 * @author manjun.han
 	 * @date 2013.9.10
 	 * @purpose 控制分页信息数据对象，配置和记录当前分页的数据项
-	 * 			如，数据项总个数，每页数据项个数，当前总页数，最大显示分页数，当前选中页等
+	 * 	    如，数据项总个数，每页数据项个数，当前总页数，最大显示分页数，当前选中页等
 	 */
 	public class MMPaginationModel
 	{
