@@ -18,7 +18,7 @@ package com.mm.model
 			options = options || {
 				totalPageDataCount:0,
 				perPageDataCount:10, // 每页默认显示项 10
-				currentPageIndexOfView:0,
+				currentPageIndex:0,
 				curPaginationButtonStartOffset:3, // 当前页的默认页偏移 3
 				paginationButtonLength:10 // 默认分页button显示个数 10
 			}
@@ -62,7 +62,7 @@ package com.mm.model
 			
 			this.computeTotalPageSize();
 			
-			this.setCurrentPageIndex(options.currentPageIndexOfView);
+			this.setCurrentPageIndex(options.currentPageIndex);
 			
 		}
 				
@@ -100,24 +100,24 @@ package com.mm.model
 		
 		/**
 		 * @purpose 设置当期选中的页码 
-		 * @param pageIndexOfView ui视图上显示的当前页索引，在model中 this.currentPageIndex = pageIndexOfView - 1 ;
+		 * @param currentPageIndex ui视图上显示的当前页索引，在model中 this.currentPageIndex = pageIndexOfView - 1 ;
 		 */
-		public function setCurrentPageIndex(pageIndexOfView:Number):void
+		public function setCurrentPageIndex(currentPageIndex:Number):void
 		{
 			// 首页边界溢出检测
-			pageIndexOfView = pageIndexOfView < 1 ? 1 : pageIndexOfView ;
+			currentPageIndex = currentPageIndex < 0 ? 0 : currentPageIndex ;
 			
 			// 尾页边界溢出检测
-			pageIndexOfView = pageIndexOfView > this.totalPageSize ? this.totalPageSize : pageIndexOfView ;
+			currentPageIndex = currentPageIndex >= this.totalPageSize ? this.totalPageSize -1 : currentPageIndex ;
 			
 			// 前后台索引从0开始
-			this.currentPageIndex = pageIndexOfView - 1 ;
+			this.currentPageIndex = currentPageIndex  ;
 			
 			// 计算新的起始页码
 			this.computeStartPageIndex();
 			
 			// 刷新前后翻页按钮状态
-			this.refreshPreAndNextButtonState();			
+			this.refreshModelButtonState();			
 		}		
 		
 		/**
@@ -125,7 +125,7 @@ package com.mm.model
 		 */
 		public function goToPrePage():void
 		{
-			var prePageIndexOfView:Number = this.currentPageIndex ;
+			var prePageIndexOfView:Number = this.currentPageIndex -1 ;
 			this.setCurrentPageIndex(prePageIndexOfView);
 		}
 		
@@ -134,8 +134,8 @@ package com.mm.model
 		 */
 		public function goToNextPage():void
 		{
-			var nextPageIndexOfView:Number = this.currentPageIndex+2 ;
-			this.setCurrentPageIndex(nextPageIndexOfView);
+			var currentPageIndex:Number = this.currentPageIndex+1 ;
+			this.setCurrentPageIndex(currentPageIndex);
 		}
 		
 		/**
@@ -210,7 +210,7 @@ package com.mm.model
 		/**
 		 *  @purpose 根据当前选中页，刷新前后翻页button的禁用状态控制
 		 */
-		public function refreshPreAndNextButtonState():void
+		public function refreshModelButtonState():void
 		{
 			//单页
 			if(this.totalPageSize == 1){
@@ -244,7 +244,7 @@ package com.mm.model
 			
 			this.computeTotalPageSize();
 			
-			this.setCurrentPageIndex(this.currentPageIndex+1);
+			this.setCurrentPageIndex(this.currentPageIndex);
 		}
 		
 		/**
@@ -255,7 +255,7 @@ package com.mm.model
 		{
 			this.paginationButtonLength = Math.abs(paginationButtonLength);
 			
-			this.setCurrentPageIndex(this.currentPageIndex+1);
+			this.setCurrentPageIndex(this.currentPageIndex);
 		}
 		
 		/**
@@ -266,7 +266,7 @@ package com.mm.model
 		{
 			this.curPaginationButtonStartOffset = Math.abs(curPaginationButtonStartOffset);
 			
-			this.setCurrentPageIndex(this.currentPageIndex+1);
+			this.setCurrentPageIndex(this.currentPageIndex);
 		}
 	}
 }
