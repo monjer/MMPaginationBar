@@ -58,32 +58,53 @@
 			
 			/**
 			 * @purpose 设置新的pageVO的分页数据
-			 * @param 分页数据项总个数
-			 * @param 当前选中页索引
+			 * @param totalDataCount 分页数据项总个数
+			 * @param currentPageIndex 当前选中页索引
 			 */
-			public function initPaginationModel(totalDataSize:Number , currentSelectedIndex:Number):void
+			public function init(totalDataCount:Number , currentPageIndex:Number):void
 			{
 				var me:MMPaginationToolBar = this ;
 				
 				this.pageVO = new MMPaginationModel({
-					totalPageDataCount:totalDataSize,
+					totalPageDataCount:totalDataCount,
 					perPageDataCount:me.perPageDataCount,
-					currentPageIndexOfView:currentSelectedIndex,
+					currentPageIndex:currentPageIndex,
 					curPaginationButtonStartOffset:me.curPaginationButtonStartOffset,
 					paginationButtonLength:me.paginationButtonLength
 					
 				});
 				
+				this.createPaginationButtons();
+				
 				this.refreshPaginationUI();
+			}
+			
+			/**
+			 * @purpose 创建分页buttons
+			 */
+			private function createPaginationButtons():void
+			{			
+				pageButtonsGroup.removeAllElements();
+				
+				var buttonLength:Number = this.pageVO.getPaginationButtonLength();
+				
+				var button:Button ;
+
+				for(var i:int = 0 ; i < buttonLength ; i++){
+					
+					button = new Button();					
+					
+					button.addEventListener(MouseEvent.CLICK , paginationButtonClickHandler);
+					
+					pageButtonsGroup.addElement(button);
+				}
 			}
 			
 			/**
 			 * @purpose 根据pageVo的信息刷新当前pageToolBar的状态
 			 */
-			public function refreshPaginationUI():void
-			{
-				pageButtonsGroup.removeAllElements();
-				
+			private function refreshPaginationUI():void
+			{				
 				var buttonLength:Number = this.pageVO.getPaginationButtonLength();
 				
 				var button:Button ;
@@ -92,9 +113,9 @@
 				
 				var curPageIndex:Number = this.pageVO.currentPageIndex ;
 				
-				for(var i:int = 0 ; i < buttonLength ; i++){
+				for(var i:Number = 0 ; i < buttonLength ; i++){
 					
-					button = new Button();
+					button = pageButtonsGroup.getElementAt(i) as Button;
 					
 					button.label = String(startPageIndex+i+1);
 					
@@ -103,10 +124,6 @@
 					}else{
 						button.styleName = "pagination-button";
 					}
-					
-					button.addEventListener(MouseEvent.CLICK , paginationButtonClickHandler);
-					
-					pageButtonsGroup.addElement(button);
 				}
 				
 				headerButton.enabled = this.pageVO.isPreButtonEnabled() ;
@@ -122,8 +139,15 @@
 					curPageLabelText = curPageLabelText.replace(MMPaginationLocal.totalPageSizeTmplString,this.pageVO.totalPageSize);
 					
 				curPageLabel.text = curPageLabelText ;
+			}
+			/**
+			 * @purpose 刷新界面UI并派发分页事件
+			 */
+			private function refreshPaginationUIAndDispatchEvent():void
+			{
+				this.refreshPaginationUI();
 				
-				this.dispatchPageIndexChangeEvent();
+				this.dispatchPageIndexChangeEvent() ;
 			}
 			
 			/**
@@ -133,7 +157,9 @@
 			{	
 				// index start from 0
 				var currentPageIndex:Number = this.pageVO.currentPageIndex ;
+				
 				var perPageDataCount:Number = this.pageVO.perPageDataCount ;
+				
 				var event:MMPaginationChangedEvent = new MMPaginationChangedEvent(MMPaginationChangedEvent.PaginationIndexChanged, currentPageIndex , perPageDataCount);
 				
 				dispatchEvent(event);
@@ -147,7 +173,7 @@
 			 * @purpose 分页按键click事件
 			 * @param event Mouse Event
 			 */
-			public function paginationButtonClickHandler(event:MouseEvent):void
+			private function paginationButtonClickHandler(event:MouseEvent):void
 			{
 				var button:Button = event.target as Button ;
 				
@@ -155,10 +181,9 @@
 				
 				if(indexOfView != this.pageVO.currentPageIndex+1){
 					
-					this.pageVO.setCurrentPageIndex(indexOfView);
+					this.pageVO.setCurrentPageIndex(indexOfView-1);
 					
-					this.refreshPaginationUI();
-					
+					this.refreshPaginationUIAndDispatchEvent();					
 				}				
 			}
 			
@@ -166,44 +191,44 @@
 			 * @purpose 首页按键事件
 			 * @param event Mouse Event
 			 */
-			protected function headerButton_clickHandler(event:MouseEvent):void
+			private function headerButton_clickHandler(event:MouseEvent):void
 			{				
-				this.pageVO.setCurrentPageIndex(1);	
+				this.pageVO.setCurrentPageIndex(0);	
 				
-				this.refreshPaginationUI();
+				this.refreshPaginationUIAndDispatchEvent();
 			}
 			
 			/**
 			 * @purpose 上一页按键事件
 			 * @param event Mouse Event
 			 */
-			protected function preButton_clickHandler(event:MouseEvent):void
+			private function preButton_clickHandler(event:MouseEvent):void
 			{
 				this.pageVO.goToPrePage();
 				
-				this.refreshPaginationUI();
+				this.refreshPaginationUIAndDispatchEvent();
 			}
 			
 			/**
 			 * @purpose 下一页按键事件
 			 * @param event Mouse Event
 			 */
-			protected function nextButton_clickHandler(event:MouseEvent):void
+			private function nextButton_clickHandler(event:MouseEvent):void
 			{
 				this.pageVO.goToNextPage();
 				
-				this.refreshPaginationUI();
+				this.refreshPaginationUIAndDispatchEvent();
 			}
 			
 			/**
 			 * @purpose 尾部按键事件
 			 * @param event Mouse Event
 			 */
-			protected function tailButton_clickHandler(event:MouseEvent):void
+			private function tailButton_clickHandler(event:MouseEvent):void
 			{
-				this.pageVO.setCurrentPageIndex(this.pageVO.totalPageSize);
+				this.pageVO.setCurrentPageIndex(this.pageVO.totalPageSize-1);
 				
-				this.refreshPaginationUI();	
+				this.refreshPaginationUIAndDispatchEvent();	
 			}
 			
 			//------------------------------------------
@@ -219,7 +244,11 @@
 			public function set perPageDataCount(value:Number):void
 			{
 				_perPageDataCount = value;
+				
 				this.pageVO.setPerPageDataCount(value);
+				
+				this.createPaginationButtons() ;
+				
 				this.refreshPaginationUI();
 			}
 
@@ -232,7 +261,11 @@
 			public function set paginationButtonLength(value:Number):void
 			{
 				_paginationButtonLength = value;
+				
 				this.pageVO.setPaginationButtonLength(value);
+				
+				this.createPaginationButtons() ;
+				
 				this.refreshPaginationUI();
 			}
 
@@ -245,7 +278,9 @@
 			public function set curPaginationButtonStartOffset(value:Number):void
 			{
 				_curPaginationButtonStartOffset = value;
+				
 				this.pageVO.setCurPaginationButtonStartOffset(value);
+				
 				this.refreshPaginationUI();
 			}
 			
