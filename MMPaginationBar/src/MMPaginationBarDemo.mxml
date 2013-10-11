@@ -39,25 +39,25 @@
 			protected function self_creationCompleteHandler(event:FlexEvent):void
 			{
 				// Group A,初始化和监听分页事件
-				paginationToolBarAA.initPaginationModel(1000 , 1);				
+				paginationToolBarAA.init(1000 , 0);				
 				paginationToolBarAA.addEventListener(MMPaginationChangedEvent.PaginationIndexChanged , paginationToolBarChangedEventHandler);
 				
 				// Group B,设置工具条显示按钮的个数，默认为6
 
-				paginationToolBarBA.initPaginationModel(100 , 1);
+				paginationToolBarBA.init(100 , 0);
 				paginationToolBarBA.paginationButtonLength = 5 ;
-				paginationToolBarBB.initPaginationModel(100 , 1);
+				paginationToolBarBB.init(100 , 0);
 				paginationToolBarBB.paginationButtonLength = 9 ;
 				
 				// Group C,设置每页显示项个数，默认为10
-				paginationToolBarCA.initPaginationModel(300 , 1);
+				paginationToolBarCA.init(300 , 0);
 				paginationToolBarCA.perPageDataCount = 6 ;
-				paginationToolBarCB.initPaginationModel(300 , 1);
-				paginationToolBarCC.initPaginationModel(300 , 1);
+				paginationToolBarCB.init(300 , 0);
+				paginationToolBarCC.init(300 , 0);
 				paginationToolBarCC.perPageDataCount = 12 ;
 								
 				// Group D，设置当前页按钮的起始偏移，默认为4
-				paginationToolBarD.initPaginationModel(300,1);
+				paginationToolBarD.init(300,0);
 				paginationToolBarD.curPaginationButtonStartOffset = 6 ;
 				
 				// Group E ,分页工具条文本国际化
@@ -69,7 +69,7 @@
 						curPageInforLabel:"Page {currentPageIndex} of {totalPageSize}"
 					}) ;
 							
-				paginationToolBarE.initPaginationModel(300,1);
+				paginationToolBarE.init(300,0);
 				paginationToolBarE.localCfg = local ;
 				
 				localDesLabel.text = "paginationBar.localCfg = new MMPaginationLocal({"+"\n"+
