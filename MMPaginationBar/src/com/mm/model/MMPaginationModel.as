@@ -212,8 +212,8 @@ package com.mm.model
 		 */
 		public function refreshModelButtonState():void
 		{
-			//单页
-			if(this.totalPageSize == 1){
+			//单页或无数据
+			if(this.totalPageSize == 1 || this.totalPageSize == 0){
 				this.preButtonEnabled = false ;
 				this.nextButtonEnabled = false ;
 			//多页
