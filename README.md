@@ -43,7 +43,11 @@ Flex4 simple pagination bar component , based on Flex SDK4.6
 
 		paginationToolBar.curPaginationButtonStartOffset = 5 ；
 
-4. 简单的国际化处理，如
+4. 去除中间的button组
+
+		paginationToolBar.includeMiddleButtons = false ;
+
+5. 简单的国际化处理，如
 
 		  var local:MMPaginationLocal = new MMPaginationLocal({
 										headerButtonLabel:"First",
