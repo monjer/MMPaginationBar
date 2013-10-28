@@ -78,6 +78,9 @@ package com.mm.model
 			// 每页显示数据项
 			this.perPageDataCount = Math.abs(options.perPageDataCount);
 			
+			// 添加校验
+			this.perPageDataCount = this.perPageDataCount == 0 ? 10 : this.perPageDataCount ;
+			
 			// view层所显示的最大页数
 			this.paginationButtonLength = Math.abs(options.paginationButtonLength) ;
 			
@@ -110,8 +113,8 @@ package com.mm.model
 			// 尾页边界溢出检测
 			currentPageIndex = currentPageIndex >= this.totalPageSize ? this.totalPageSize -1 : currentPageIndex ;
 			
-			// 前后台索引从0开始
-			this.currentPageIndex = currentPageIndex  ;
+			// 前后台索引从0开始,避免产生负值（totalPageSize=currentPageIndex=0）
+			this.currentPageIndex = currentPageIndex < 0 ? 0 : currentPageIndex ;
 			
 			// 计算新的起始页码
 			this.computeStartPageIndex();
@@ -212,8 +215,8 @@ package com.mm.model
 		 */
 		public function refreshModelButtonState():void
 		{
-			//单页
-			if(this.totalPageSize == 1){
+			//单页或无数据项
+			if(this.totalPageSize == 1 || this.totalPageSize == 0){
 				this.preButtonEnabled = false ;
 				this.nextButtonEnabled = false ;
 			//多页
