@@ -44,23 +44,30 @@
 				
 				// Group B,设置工具条显示按钮的个数，默认为6
 
-				paginationToolBarBA.init(100 , 0);
 				paginationToolBarBA.paginationButtonLength = 5 ;
-				paginationToolBarBB.init(100 , 0);
+				paginationToolBarBA.init(100 , 0);
+				
 				paginationToolBarBB.paginationButtonLength = 9 ;
+				paginationToolBarBB.init(100 , 0);				
 				
 				// Group C,设置每页显示项个数，默认为10
 				paginationToolBarCA.init(300 , 0);
-				paginationToolBarCA.perPageDataCount = 6 ;
+				
+				paginationToolBarCB.perPageDataCount = 6 ;
 				paginationToolBarCB.init(300 , 0);
-				paginationToolBarCC.init(300 , 0);
+				
 				paginationToolBarCC.perPageDataCount = 12 ;
+				paginationToolBarCC.init(300 , 0);
 								
 				// Group D，设置当前页按钮的起始偏移，默认为4
 				paginationToolBarD.init(300,0);
 				paginationToolBarD.curPaginationButtonStartOffset = 6 ;
 				
 				// Group E ,分页工具条文本国际化
+				paginationToolBarE.includeMiddleButtons = false ;
+				paginationToolBarE.init(300,0);
+				
+				// Group F ,分页工具条文本国际化
 				var local:MMPaginationLocal = new MMPaginationLocal({
 						headerButtonLabel:"First",
 						preButtonLabel:"Pre",
@@ -69,8 +76,8 @@
 						curPageInforLabel:"Page {currentPageIndex} of {totalPageSize}"
 					}) ;
 							
-				paginationToolBarE.init(300,0);
-				paginationToolBarE.localCfg = local ;
+				paginationToolBarF.init(300,0);
+				paginationToolBarF.localCfg = local ;
 				
 				localDesLabel.text = "paginationBar.localCfg = new MMPaginationLocal({"+"\n"+
 						"\t\t\t\t\t\t"+"headerButtonLabel:\"First\","+"\n"+
@@ -87,58 +94,74 @@
 				var newIndex:Number = event.currentPageIndex ;
 				// server side request code here
 				Alert.show("Request page : "+newIndex);
+				
 			}
 		]]>
 	</fx:Script>
-	<fx:Declarations>
-		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
-	</fx:Declarations>
-	<s:layout>
-		<s:VerticalLayout horizontalAlign="left" paddingLeft="100" paddingRight="100" verticalAlign="top" paddingTop="10" gap="10"/>
-	</s:layout>
-	<s:VGroup width="100%" gap="20">
-		<s:Label text="1.分页工具初始化设置,分页事件监听" styleName="header-title"/>
-		<s:Label text="paginationToolBarAA.addEventListener(MMPaginationChangedEvent.PaginationIndexChanged , paginationToolBarChangedEventHandler);" styleName="property-label"/>
-		<ui:MMPaginationToolBar id="paginationToolBarAA"  paginationButtonLength="9" width="300" height="30"/>
-	</s:VGroup>
-	<s:Line width="100%" >
-		<s:stroke>
-			<s:SolidColorStroke color="#cccccc"/>
-		</s:stroke>
-	</s:Line>
-	<s:VGroup width="100%" gap="20">
-		<s:Label text="2.设置工具条显示按钮的个数" styleName="header-title"/><s:Label text="paginationBar.paginationButtonLength=10;" styleName="property-label"/>
-		<ui:MMPaginationToolBar id="paginationToolBarBA"  width="300" height="30"/>	
-		<ui:MMPaginationToolBar id="paginationToolBarBB"  width="300" height="30"/>			
-	</s:VGroup>
-	<s:Line width="100%" >
-		<s:stroke>
-			<s:SolidColorStroke color="#cccccc"/>
-		</s:stroke>
-	</s:Line>
-	<s:VGroup width="100%" gap="20">
-		<s:Label text="3.设置每页显示项个数" styleName="header-title"/><s:Label text="paginationBar.perPageDataCount=10;" styleName="property-label"/>
-		<ui:MMPaginationToolBar id="paginationToolBarCA" width="300" height="30"/>
-		<ui:MMPaginationToolBar id="paginationToolBarCB"  width="300" height="30"/>
-		<ui:MMPaginationToolBar id="paginationToolBarCC" width="300" height="30"/>			
-	</s:VGroup>
-	<s:Line width="100%" >
-		<s:stroke>
-			<s:SolidColorStroke color="#cccccc"/>
-		</s:stroke>
-	</s:Line>
-	<s:VGroup width="100%" gap="20">
-		<s:Label text="4.设置当前页按钮的起始偏移" styleName="header-title"/><s:Label text="paginationBar.curPaginationButtonStartOffset=3;" styleName="property-label"/>
-		<ui:MMPaginationToolBar id="paginationToolBarD"  paginationButtonLength="9" width="300" height="30"/>
-	</s:VGroup>	
-	<s:Line width="100%" >
-		<s:stroke>
-			<s:SolidColorStroke color="#cccccc"/>
-		</s:stroke>
-	</s:Line>
-	<s:VGroup width="100%" gap="20">
-		<s:Label text="5.分页工具条文本国际化" styleName="header-title"/><s:Label id="localDesLabel" text=" " styleName="property-label"/>
-		<ui:MMPaginationToolBar id="paginationToolBarE"  paginationButtonLength="9" width="300" height="30"/>
-	</s:VGroup>
+	<s:Scroller width="100%" height="100%">
+		<s:Group width="100%" height="100%">
+			<s:layout>
+				<s:VerticalLayout horizontalAlign="left" paddingLeft="100" paddingRight="100" verticalAlign="top" paddingTop="50" paddingBottom="50" gap="10"/>
+			</s:layout>
+			<s:VGroup width="100%" gap="20">
+				<s:Label text="1.分页工具初始化设置,分页事件监听" styleName="header-title"/>
+				<s:Label text="paginationToolBarAA.addEventListener(MMPaginationChangedEvent.PaginationIndexChanged , paginationToolBarChangedEventHandler);" styleName="property-label"/>
+				<ui:MMPaginationToolBar id="paginationToolBarAA"  paginationButtonLength="9" width="300" height="30"/>
+			</s:VGroup>
+			<s:Line width="100%" >
+				<s:stroke>
+					<s:SolidColorStroke color="#cccccc"/>
+				</s:stroke>
+			</s:Line>
+			<s:VGroup width="100%" gap="20">
+				<s:Label text="2.设置工具条显示按钮的个数" styleName="header-title"/>
+				<s:Label text="paginationBar.paginationButtonLength=10;" styleName="property-label"/>
+				<ui:MMPaginationToolBar id="paginationToolBarBA"  width="300" height="30"/>	
+				<ui:MMPaginationToolBar id="paginationToolBarBB"  width="300" height="30"/>			
+			</s:VGroup>
+			<s:Line width="100%" >
+				<s:stroke>
+					<s:SolidColorStroke color="#cccccc"/>
+				</s:stroke>
+			</s:Line>
+			<s:VGroup width="100%" gap="20">
+				<s:Label text="3.设置每页显示项个数" styleName="header-title"/>
+				<s:Label text="paginationBar.perPageDataCount=10;" styleName="property-label"/>
+				<ui:MMPaginationToolBar id="paginationToolBarCA" width="300" height="30"/>
+				<ui:MMPaginationToolBar id="paginationToolBarCB"  width="300" height="30"/>
+				<ui:MMPaginationToolBar id="paginationToolBarCC" width="300" height="30"/>			
+			</s:VGroup>
+			<s:Line width="100%" >
+				<s:stroke>
+					<s:SolidColorStroke color="#cccccc"/>
+				</s:stroke>
+			</s:Line>
+			<s:VGroup width="100%" gap="20">
+				<s:Label text="4.设置当前页按钮的起始偏移" styleName="header-title"/>
+				<s:Label text="paginationBar.curPaginationButtonStartOffset=3;" styleName="property-label"/>
+				<ui:MMPaginationToolBar id="paginationToolBarD"  paginationButtonLength="9" width="300" height="30"/>
+			</s:VGroup>	
+			<s:Line width="100%" >
+				<s:stroke>
+					<s:SolidColorStroke color="#cccccc"/>
+				</s:stroke>
+			</s:Line>
+			<s:VGroup width="100%" gap="20">
+				<s:Label text="5.去除中间button组" styleName="header-title"/>
+				<s:Label text="paginationBar.includeMiddleButtons=false;" styleName="property-label"/>
+				<ui:MMPaginationToolBar id="paginationToolBarE"  height="30"/>
+			</s:VGroup>
+			<s:Line width="100%" >
+				<s:stroke>
+					<s:SolidColorStroke color="#cccccc"/>
+				</s:stroke>
+			</s:Line>
+			<s:VGroup width="100%" gap="20">
+				<s:Label text="6.分页工具条文本国际化" styleName="header-title"/><s:Label id="localDesLabel" text=" " styleName="property-label"/>
+				<ui:MMPaginationToolBar id="paginationToolBarF"  paginationButtonLength="9" width="300" height="30"/>
+			</s:VGroup>
+		</s:Group>
+	</s:Scroller>
+	
 	
 </s:Application>
