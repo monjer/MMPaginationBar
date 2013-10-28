@@ -52,6 +52,8 @@
 			
 			private var _localCfg:MMPaginationLocal = new MMPaginationLocal();
 			
+			private var _includeMiddleButtons:Boolean = true ;// 是否包含中间button组
+			
 			//----------------------------------
 			// 方法
 			//----------------------------------
@@ -74,8 +76,10 @@
 					
 				});
 				
-				this.createPaginationButtons();
-				
+				if(this.includeMiddleButtons){
+					this.createPaginationButtons();
+				}
+								
 				this.refreshPaginationUI();
 			}
 			
@@ -105,24 +109,26 @@
 			 */
 			private function refreshPaginationUI():void
 			{				
-				var buttonLength:Number = this.pageVO.getPaginationButtonLength();
-				
-				var button:Button ;
-				
-				var startPageIndex:Number = this.pageVO.startPageIndex ;
-				
-				var curPageIndex:Number = this.pageVO.currentPageIndex ;
-				
-				for(var i:Number = 0 ; i < buttonLength ; i++){
+				if(this.includeMiddleButtons){
+					var buttonLength:Number = this.pageVO.getPaginationButtonLength();
 					
-					button = pageButtonsGroup.getElementAt(i) as Button;
+					var button:Button ;
 					
-					button.label = String(startPageIndex+i+1);
+					var startPageIndex:Number = this.pageVO.startPageIndex ;
 					
-					if(startPageIndex+i == curPageIndex){
-						button.styleName = "pagination-button curSelected-pagination-button";
-					}else{
-						button.styleName = "pagination-button";
+					var curPageIndex:Number = this.pageVO.currentPageIndex ;
+									
+					for(var i:Number = 0 ; i < buttonLength ; i++){
+						
+						button = pageButtonsGroup.getElementAt(i) as Button;
+						
+						button.label = String(startPageIndex+i+1);
+						
+						if(startPageIndex+i == curPageIndex){
+							button.styleName = "pagination-button curSelected-pagination-button";
+						}else{
+							button.styleName = "pagination-button";
+						}
 					}
 				}
 				
@@ -247,7 +253,9 @@
 				
 				this.pageVO.setPerPageDataCount(value);
 				
-				this.createPaginationButtons() ;
+				if(this.includeMiddleButtons){
+					this.createPaginationButtons();
+				}
 				
 				this.refreshPaginationUI();
 			}
@@ -264,7 +272,9 @@
 				
 				this.pageVO.setPaginationButtonLength(value);
 				
-				this.createPaginationButtons() ;
+				if(this.includeMiddleButtons){
+					this.createPaginationButtons();
+				}
 				
 				this.refreshPaginationUI();
 			}
@@ -296,6 +306,17 @@
 				
 				this.refreshPaginationUI();
 			}
+
+			public function get includeMiddleButtons():Boolean
+			{
+				return _includeMiddleButtons;
+			}
+
+			public function set includeMiddleButtons(value:Boolean):void
+			{
+				_includeMiddleButtons = value;
+			}
+
 			
 		]]>
 	</fx:Script>
