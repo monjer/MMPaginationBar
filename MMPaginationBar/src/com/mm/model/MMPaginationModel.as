@@ -215,11 +215,7 @@ package com.mm.model
 		 */
 		public function refreshModelButtonState():void
 		{
-<<<<<<< HEAD
-			//单页或无数据项
-=======
 			//单页或无数据
->>>>>>> 7679a93dc28cbde8c743ef55910e2cc619cd0bec
 			if(this.totalPageSize == 1 || this.totalPageSize == 0){
 				this.preButtonEnabled = false ;
 				this.nextButtonEnabled = false ;
